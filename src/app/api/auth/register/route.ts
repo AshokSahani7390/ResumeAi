@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
-import bcrypt from "bcryptjs";
+import * as bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { signToken } from "@/lib/auth";
 import { Resend } from "resend";
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
             <div style="background: #f9fafb; padding: 20px; border-radius: 15px; margin: 20px 0;">
               <h3 style="margin-top: 0;">Next Step:</h3>
               <p>Go to your dashboard and click <strong>"Create New Resume"</strong> to begin.</p>
-              <a href="http://localhost:3002/dashboard" style="display: inline-block; background: #2563eb; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold;">Create My Resume</a>
+              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard" style="display: inline-block; background: #2563eb; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold;">Create My Resume</a>
             </div>
             <p style="color: #64748b; font-size: 14px;">Happy job hunting,<br>The ResumeAI Team</p>
           </div>

@@ -1,11 +1,9 @@
-import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
 export const prisma = globalForPrisma.prisma || new PrismaClient();
 
-console.log("Prisma client initialized. DB_URL present:", !!process.env.DATABASE_URL);
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export default prisma;
