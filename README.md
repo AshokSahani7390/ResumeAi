@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ResumeAI — AI-Powered Resume Builder & ATS Optimizer
 
-## Getting Started
+ResumeAI is a production-ready SaaS application designed to help users create high-impact, ATS-optimized resumes and cover letters using OpenAI. 
 
-First, run the development server:
+## 🚀 Features
 
+- **🤖 AI Resume Engine**: Generate professional summaries and bullet points using specialized prompts.
+- **✉️ AI Cover Letter**: Personalized, engaging cover letters in seconds.
+- **📊 ATS Audit Report**: Real-time scoring (0-100) with strengths, weaknesses, and missing keyword analysis.
+- **⚡ Smart Keyword Boost**: One-click optimization to inject industry-relevant keywords.
+- **🎨 Premium Templates**: Choose between Professional, Modern, and Minimal layouts.
+- **🔐 Secure Persistence**: Built-in authentication (JWT) with real-time cloud sync (Prisma + PostgreSQL).
+- **📥 PDF Export**: High-quality PDF generation for job applications.
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15+ (App Router), React 19, TailwindCSS 4.
+- **Backend**: Next.js API Routes, JWT Auth.
+- **Database**: PostgreSQL (via Neon), Prisma ORM 7.
+- **AI**: OpenAI API (GPT-4o-mini).
+
+## ⚙️ Setup Instructions
+
+### 1. Clone & Install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <your-repo-url>
+cd resumeai-app
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Variables
+Create a `.env` file in the root (and `.env.local` for local dev):
+```env
+DATABASE_URL="your_neon_postgresql_url"
+JWT_SECRET="your_secure_random_string"
+OPENAI_API_KEY="your_openai_api_key"
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Database Sync
+```bash
+# Push schema to Neon
+npx prisma db push
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Generate Prisma Client
+npx prisma generate
+```
 
-## Learn More
+### 4. Run Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to see your app.
 
-To learn more about Next.js, take a look at the following resources:
+## 📁 Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `src/app/api`: Backend logic and AI endpoints.
+- `src/app/create`: Multi-step resume builder logic.
+- `src/app/dashboard`: User's saved resume management.
+- `src/lib`: Shared utilities (Auth, Prisma Client).
+- `prisma/schema.prisma`: Database models.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+MIT

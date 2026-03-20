@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ═══════════════════════════════
+// DATA TYPE 1: USER
+// ═══════════════════════════════
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String
+  role          String    @default("USER") // USER | ADMIN
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  resumes       Resume[]
+  payments      Payment[]
+}
+
+// ═══════════════════════════════
+// DATA TYPE 2: RESUME (Main Table)
+// ═══════════════════════════════
+model Resume {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // User Input Fields
+  title           String           // "Software Engineer Resume"
+  fullName        String
+  email           String
+  phone           String?
+  location        String?
+  jobRole         String
+  experienceLevel String?
+  skills          String?          // Comma separated
+  experience      String?          // JSON or text
+  education       String?          // JSON or text
+
+  // AI Generated Output
+  aiResume        String?  @db.Text  // Full AI resume content
+  aiCoverLetter   String?  @db.Text  // Full AI cover letter
+  template        String   @default("Professional")
+
+  // ATS Analysis
+  atsScore        Int?              // 0-100
+  atsStrengths    String?  @db.Text  // JSON array
+  atsWeaknesses   String?  @db.Text  // JSON array
+  atsSuggestions  String?  @db.Text  // JSON array
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  payments        Payment[]
+}
+
+// ═══════════════════════════════
+// DATA TYPE 3: PAYMENT
+// ═══════════════════════════════
+model Payment {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resumeId      String?
+  resume        Resume?  @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+
+  amount        Float
+  currency      String   @default("INR")
+  status        String   @default("pending") // pending | paid | failed
+  provider      String   @default("razorpay") // razorpay | stripe
+  transactionId String?
+
+  createdAt     DateTime @default(now())
+}
