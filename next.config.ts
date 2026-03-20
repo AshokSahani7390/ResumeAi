@@ -1,17 +1,23 @@
 import type { NextConfig } from "next";
 
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
-  reactCompiler: false, // Turn off experimental compiler
+  reactCompiler: false, // Explicitly false as requested in earlier queries
   output: "standalone",
-  serverExternalPackages: ["@prisma/client", "bcryptjs", "jsonwebtoken"],
-  // This is the CRITICAL part: Disabling the new Turbopack build engine to fix the "instantiateModule" crash
-  experimental: {
-    turbo: {
-      rules: {}
+  serverExternalPackages: [
+    "@prisma/client",
+    "prisma",
+    "bcryptjs",
+    "jsonwebtoken",
+    "resend",
+    "openai"
+  ],
+  // Remove experimental block if it's causing unrecognized key errors
+  // Next 15/16 uses top-level keys for many formerly experimental features
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push("@prisma/client", "bcryptjs", "jsonwebtoken");
     }
-  },
-  webpack: (config) => {
-    // Forcing Webpack to handle dependencies helps stabilize Prisma/bcrypt in Next.js 16
     return config;
   }
 };

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
+
 import { Resend } from "resend";
+
 import { getUserFromRequest } from "@/lib/auth";
 
 const resend = new Resend(process.env.RESEND_API_KEY);

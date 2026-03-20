@@ -4,13 +4,14 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   try {
     const { getUserFromRequest } = await import("@/lib/auth");
-    const { prisma } = await import("@/lib/prisma");
+    const { getPrisma } = await import("@/lib/prisma");
 
     const payload = getUserFromRequest(req);
     if (!payload) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const prisma = getPrisma();
     const user = await prisma.user.findUnique({
       where: { id: payload.userId },
       select: { id: true, name: true, email: true, role: true, createdAt: true },

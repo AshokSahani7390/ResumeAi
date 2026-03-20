@@ -7,12 +7,14 @@ export async function GET(
 ) {
   try {
     const { getUserFromRequest } = await import("@/lib/auth");
-    const { prisma } = await import("@/lib/prisma");
+    const { getPrisma } = await import("@/lib/prisma");
 
     const user = getUserFromRequest(req);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const prisma = getPrisma();
 
     const { id } = await params;
 
@@ -37,12 +39,14 @@ export async function PUT(
 ) {
   try {
     const { getUserFromRequest } = await import("@/lib/auth");
-    const { prisma } = await import("@/lib/prisma");
+    const { getPrisma } = await import("@/lib/prisma");
 
     const user = getUserFromRequest(req);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const prisma = getPrisma();
 
     const { id } = await params;
     const body = await req.json();
@@ -84,12 +88,14 @@ export async function DELETE(
 ) {
   try {
     const { getUserFromRequest } = await import("@/lib/auth");
-    const { prisma } = await import("@/lib/prisma");
+    const { getPrisma } = await import("@/lib/prisma");
 
     const user = getUserFromRequest(req);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const prisma = getPrisma();
 
     const { id } = await params;
 

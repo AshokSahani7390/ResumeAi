@@ -11,8 +11,11 @@ export async function POST(req: Request) {
 
     // Lazy load libraries to prevent build-time crashes with Turbopack
     const { default: bcrypt } = await import("bcryptjs");
-    const { prisma } = await import("@/lib/prisma");
+    const { getPrisma } = await import("@/lib/prisma"); // Use the function specifically
     const { signToken } = await import("@/lib/auth");
+
+    // Initialize Prisma only inside the handler!
+    const prisma = getPrisma();
 
     // Find user
     const user = await prisma.user.findUnique({ where: { email } });

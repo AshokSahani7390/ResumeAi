@@ -4,12 +4,14 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   try {
     const { getUserFromRequest } = await import("@/lib/auth");
-    const { prisma } = await import("@/lib/prisma");
+    const { getPrisma } = await import("@/lib/prisma");
 
     const user = getUserFromRequest(req);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const prisma = getPrisma();
 
     const resumes = await prisma.resume.findMany({
       where: { userId: user.userId },
@@ -35,12 +37,14 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const { getUserFromRequest } = await import("@/lib/auth");
-    const { prisma } = await import("@/lib/prisma");
+    const { getPrisma } = await import("@/lib/prisma");
 
     const user = getUserFromRequest(req);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const prisma = getPrisma();
 
     const body = await req.json();
     const {

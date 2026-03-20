@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
@@ -11,10 +11,12 @@ export async function POST(req: Request) {
 
     // Lazy load libraries to prevent build-time crashes with Turbopack
     const { default: bcrypt } = await import("bcryptjs");
-    const { prisma } = await import("@/lib/prisma");
+    const { getPrisma } = await import("@/lib/prisma"); // Use the getter
     const { signToken } = await import("@/lib/auth");
     const { Resend } = await import("resend");
 
+    // Initialize Prisma only inside the handler!
+    const prisma = getPrisma();
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     // Check if user already exists
