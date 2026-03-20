@@ -11,9 +11,9 @@ const nextConfig: NextConfig = {
     "resend",
     "openai"
   ],
-  experimental: {
-    // Ensuring no conflicting experimental flags are active
-  }
+  // Explicitly enable empty turbopack config for Next 16 production build compatibility 
+  // This silences the error when Turbopack is used by default
+  turbopack: {}
 };
 
 export default nextConfig;
