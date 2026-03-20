@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
-import bcrypt from "bcryptjs";
-import prisma from "@/lib/prisma";
-import { signToken } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
@@ -11,6 +8,11 @@ export async function POST(req: Request) {
     if (!email || !password) {
       return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
     }
+
+    // Lazy load libraries to prevent build-time crashes with Turbopack
+    const { default: bcrypt } = await import("bcryptjs");
+    const { prisma } = await import("@/lib/prisma");
+    const { signToken } = await import("@/lib/auth");
 
     // Find user
     const user = await prisma.user.findUnique({ where: { email } });

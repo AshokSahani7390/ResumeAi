@@ -1,11 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 export const dynamic = "force-dynamic";
-import bcrypt from "bcryptjs";
-import prisma from "@/lib/prisma";
-import { signToken } from "@/lib/auth";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
@@ -14,6 +8,14 @@ export async function POST(req: Request) {
     if (!name || !email || !password) {
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     }
+
+    // Lazy load libraries to prevent build-time crashes with Turbopack
+    const { default: bcrypt } = await import("bcryptjs");
+    const { prisma } = await import("@/lib/prisma");
+    const { signToken } = await import("@/lib/auth");
+    const { Resend } = await import("resend");
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     // Check if user already exists
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -66,7 +68,7 @@ export async function POST(req: Request) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
     });
 
     return response;
