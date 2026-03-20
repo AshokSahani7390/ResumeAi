@@ -1,19 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
-import prisma from "@/lib/prisma";
-import { getUserFromRequest } from "@/lib/auth";
 
-// ═══════════════════════════════
-// GET /api/resumes — List all resumes for the logged-in user
-// ═══════════════════════════════
 export async function GET(req: NextRequest) {
   try {
+    const { getUserFromRequest } = await import("@/lib/auth");
+    const { prisma } = await import("@/lib/prisma");
+
     const user = getUserFromRequest(req);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // USER PRIVACY: Only return resumes belonging to THIS user
     const resumes = await prisma.resume.findMany({
       where: { userId: user.userId },
       orderBy: { createdAt: "desc" },
@@ -35,11 +32,11 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// ═══════════════════════════════
-// POST /api/resumes — Create a new resume (save user input + AI output)
-// ═══════════════════════════════
 export async function POST(req: NextRequest) {
   try {
+    const { getUserFromRequest } = await import("@/lib/auth");
+    const { prisma } = await import("@/lib/prisma");
+
     const user = getUserFromRequest(req);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
